@@ -1,0 +1,10 @@
+# V21.4 OCR runtime
+# Python 3.6-3.12 can use the older bundled RapidOCR ONNX package.
+rapidocr-onnxruntime>=1.4,<2; python_version<'3.13'
+
+# Python 3.13+ must use the successor RapidOCR 3.x core plus ONNX Runtime.
+rapidocr>=3.9,<4; python_version>='3.13'
+onnxruntime>=1.27,<2; python_version>='3.13'
+
+Pillow>=10,<13
+numpy>=1.26,<3

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NUNES V21.5 Setup</title>
+<style>
+*{box-sizing:border-box}
+:root{--ink:#10213d;--muted:#6c83a7;--line:#dbe6f3;--blue:#2563eb;--purple:#7c3aed;--green:#16a34a}
+body{margin:0;min-height:100vh;font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--ink);background:radial-gradient(circle at top left,#dbeafe 0,transparent 38%),radial-gradient(circle at bottom right,#ede9fe 0,transparent 34%),#f3f7fd;padding:34px}
+.shell{max-width:1050px;margin:auto;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:30px;box-shadow:0 28px 80px rgba(15,23,42,.15);overflow:hidden}
+.top{padding:28px 32px;background:linear-gradient(135deg,#0a1530,#172554);color:white;display:flex;gap:18px;align-items:center}
+.logo{width:56px;height:56px;border-radius:18px;background:white;color:#10213d;display:grid;place-items:center;font-size:21px;font-weight:900}.top h1{margin:0;font-size:28px}.top p{margin:6px 0 0;color:#cbd9f4}
+.body{padding:30px}.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:22px}.card{border:1px solid var(--line);border-radius:22px;padding:22px;background:#fff}.card h2{margin:0 0 6px;font-size:20px}.muted{color:var(--muted);font-size:13px;line-height:1.55}.field{margin-top:16px}.field label{display:block;font-size:12px;font-weight:900;letter-spacing:.04em;color:#405a80;margin-bottom:7px}.field input{width:100%;height:46px;border:1px solid #d7e2ef;border-radius:13px;padding:0 13px;font-size:14px;outline:none}.field input:focus{border-color:#7da7f4;box-shadow:0 0 0 4px rgba(37,99,235,.1)}.fixed{padding:12px 14px;border-radius:13px;background:#f6f9fd;border:1px solid #e4ebf4;font-family:Consolas,monospace;font-size:12px;word-break:break-all}.btn{height:46px;border:0;border-radius:13px;padding:0 18px;font-weight:900;cursor:pointer}.primary{background:linear-gradient(135deg,#2563eb,#7c3aed);color:white}.secondary{background:#eef4ff;color:#1e40af}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.notice{margin-top:16px;padding:14px 16px;border-radius:14px;background:#f7fbff;border:1px solid #e0eaf6;color:#35547e;font-size:13px;line-height:1.55}.ok{background:#ecfdf3;border-color:#c9f2d8;color:#166534}.error{background:#fff1f2;border-color:#fecdd3;color:#9f1239}.steps{display:grid;gap:12px;margin-top:16px}.step{display:flex;gap:12px;padding:13px;border-radius:15px;background:#f8fbff;border:1px solid #e7eef7}.num{width:30px;height:30px;border-radius:10px;background:#e7efff;color:#1d4ed8;display:grid;place-items:center;font-weight:900;flex:0 0 auto}.step b{display:block;margin-bottom:4px}.importbox{margin-top:18px;padding:16px;border:1px dashed #b9cae2;border-radius:16px;background:#fbfdff}.importbox input{width:100%;margin-top:10px}.tiny{font-size:12px;color:#7288a8;margin-top:8px}@media(max-width:850px){.grid{grid-template-columns:1fr}body{padding:16px}.body{padding:20px}.top{padding:22px}.top h1{font-size:23px}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top"><div class="logo">NI</div><div><h1>NUNES Product Intelligence V21.5</h1><p>One-time secure local setup — no manual .env editing required</p></div></div>
+  <div class="body">
+    <div class="grid">
+      <div class="card">
+        <h2>Connect Google Gmail credentials</h2>
+        <div class="muted">These values are saved only in this app folder as <b>.env</b>. They are not shown back after saving.</div>
+
+        <div class="field"><label>GOOGLE OAUTH WEB CLIENT ID</label><input id="clientId" autocomplete="off" placeholder="123456789-xxxxx.apps.googleusercontent.com"></div>
+        <div class="field"><label>GOOGLE OAUTH CLIENT SECRET</label><input id="clientSecret" type="password" autocomplete="new-password" placeholder="Paste your real Google Client Secret"></div>
+        <div class="field"><label>GOOGLE SHEET ID (OPTIONAL)</label><input id="sheetId" autocomplete="off" placeholder="Leave blank if you do not need Google Sheets output"></div>
+
+        <div class="actions"><button id="saveBtn" class="btn primary">Save Configuration & Continue</button></div>
+        <div id="message" class="notice hidden"></div>
+
+        <div class="importbox">
+          <b>Already have a working .env?</b>
+          <div class="tiny">Select it here and V21.5 will import the required Google/local settings safely.</div>
+          <input id="envFile" type="file" accept=".env,text/plain">
+          <div class="actions"><button id="importBtn" class="btn secondary">Import Existing .env</button></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Google Cloud values must match exactly</h2>
+        <div class="steps">
+          <div class="step"><div class="num">1</div><div><b>Application type</b><span class="muted">Web application</span></div></div>
+          <div class="step"><div class="num">2</div><div><b>Authorized JavaScript origin</b><div class="fixed">http://127.0.0.1:5067</div></div></div>
+          <div class="step"><div class="num">3</div><div><b>Authorized redirect URI</b><div class="fixed">http://127.0.0.1:5067/auth/google/callback</div></div></div>
+          <div class="step"><div class="num">4</div><div><b>Testing mode</b><span class="muted">Add the Gmail account you want to connect under Google Auth Platform → Audience → Test users.</span></div></div>
+        </div>
+        <div id="statusBox" class="notice">Checking existing local configuration…</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+function showMessage(text,type){const el=$('message');el.className='notice '+(type||'');el.textContent=text;}
+async function status(){try{const r=await fetch('/api/setup/status');const s=await r.json();$('statusBox').className='notice '+(s.oauth_configured?'ok':'');$('statusBox').textContent=s.oauth_configured?`Configuration already exists${s.client_id_hint?' • '+s.client_id_hint:''}. You can overwrite it here if required.`:'Configuration is not complete yet. Enter the Google credentials above.';}catch(e){$('statusBox').textContent='Could not read setup status.'}}
+$('saveBtn').addEventListener('click',async()=>{const b=$('saveBtn');b.disabled=true;b.textContent='Saving…';try{const r=await fetch('/api/setup/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({GOOGLE_CLIENT_ID:$('clientId').value,GOOGLE_CLIENT_SECRET:$('clientSecret').value,GOOGLE_SHEET_ID:$('sheetId').value})});const data=await r.json();if(!r.ok)throw new Error(data.error||'Setup failed');showMessage('Configuration saved. Opening the dashboard…','ok');setTimeout(()=>location.href='/',700);}catch(e){showMessage(e.message,'error')}finally{b.disabled=false;b.textContent='Save Configuration & Continue'}});
+$('importBtn').addEventListener('click',async()=>{const f=$('envFile').files[0];if(!f)return showMessage('Choose your existing .env file first.','error');const b=$('importBtn');b.disabled=true;b.textContent='Importing…';try{const fd=new FormData();fd.append('file',f);const r=await fetch('/api/setup/import-env',{method:'POST',body:fd});const data=await r.json();if(!r.ok)throw new Error(data.error||'Import failed');showMessage('Existing configuration imported. Opening the dashboard…','ok');setTimeout(()=>location.href='/',700);}catch(e){showMessage(e.message,'error')}finally{b.disabled=false;b.textContent='Import Existing .env'}});
+status();
+</script>
+</body>
+</html>

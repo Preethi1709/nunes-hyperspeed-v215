@@ -1,0 +1,41 @@
+V21.5 SURREAL HYPERSPEED - BUILD REPORT
+=======================================
+
+Build ID: V21_5_SURREAL_HYPERSPEED
+Database schema: 215
+Persistent DB filename: nunes_v213_fresh.db
+
+Implemented:
+- Stage 0 conservative irrelevant-mail short circuit.
+- Stage 1 format segregation before deep extraction.
+- Durable SQLite Stage-2 task table with independent TEXT/PDF/TABLE/DOC/OCR/OTHER queues.
+- Independent bounded worker pools; OCR remains capped at one.
+- PDF filename prioritization without treating filename as price proof.
+- Cheap embedded-text PDF commercial sweep before deep table parsing.
+- Target-page PDF extraction window around monetary evidence.
+- Catalog/profile/spec-sheet early stop when no explicit commercial price evidence exists.
+- PDF-to-OCR routing only when embedded text is absent.
+- Progressive OCR + initial empty-page circuit breaker.
+- Cross-document deterministic Python correlation after specialist tasks.
+- Exception-only local AI with Python final authority.
+- Per-lane stale task recovery and diagnostics.
+- One-time V21.4 unfinished-backlog redistribution through Stage 0/1.
+- Safe schema 214 -> 215 migration and upgrade installer.
+- Existing V21.4 deterministic accuracy/firewall retained unchanged.
+
+Validation passed before packaging:
+- V21.5 architecture test
+- V21.5 Stage 0/1 routing test
+- V21.5 migration test
+- Full known V21.4 accuracy regression suite
+- JavaScript syntax check
+
+Real supplied-document probe validation during build:
+- SDmatic quotation: commercial PDF detected; hit pages 1-2.
+- LES calibration quotation: commercial PDF detected; hit pages 1-2.
+- BEETECH B-101 specification sheet: no commercial price; deep price parsing skipped.
+- LES company profile: no commercial price; deep price parsing skipped.
+- CIE Products image-only PDF: correctly identified as scanned/image PDF for OCR routing.
+
+Performance note:
+V21.5 is designed to improve sustained throughput by preventing non-commercial documents and slow OCR jobs from occupying the same queue as normal text/PDF/table work. Previously discussed 5-10 emails/minute figures are design targets only and are not guaranteed benchmark results.

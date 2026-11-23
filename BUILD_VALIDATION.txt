@@ -1,0 +1,18 @@
+V21.5 FINAL BUILD VALIDATION
+============================
+- Architecture test: PASSED
+- Stage 0/Stage 1 routing test: PASSED
+- Schema 214 -> 215 migration test: PASSED
+- Full known deterministic accuracy regression: PASSED
+- JavaScript syntax: PASSED
+- Safe installer end-to-end simulation from V21.4: PASSED
+- .env secret-preservation simulation: PASSED
+- SQLite consistent safety-backup simulation: PASSED
+- Supplied-document commercial probe validation: PASSED
+
+Supplied-document probe outcomes used during build:
+- SDmatic quotation: commercial, price-hit pages 1-2
+- LES calibration quotation: commercial, price-hit pages 1-2
+- BEETECH B-101 spec sheet: no commercial price, deep price parse skipped
+- LES company profile: no commercial price, deep price parse skipped
+- CIE Products PDF: image-only, routed to OCR lane

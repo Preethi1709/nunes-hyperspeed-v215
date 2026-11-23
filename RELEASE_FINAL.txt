@@ -1,0 +1,6 @@
+NUNES PRODUCT INTELLIGENCE V21.5 SURREAL HYPERSPEED - FINAL
+Build ID: V21_5_SURREAL_HYPERSPEED
+SQLite schema: 215
+Upgrade path: existing V21.4 live project -> safe in-place V21.5 code/schema migration
+Architecture: Stage 0 -> Stage 1 format segregation -> independent Stage 2 specialists -> Python rescue -> local AI exception -> Python final evidence firewall
+Status: master tests passed before packaging

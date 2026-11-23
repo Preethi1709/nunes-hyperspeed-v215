@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>NUNES Product Intelligence</title>
+  <link rel="stylesheet" href="/static/styles_v215.css?v=215-surreal-hyperspeed">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">NI</div>
+      <div><strong>NUNES</strong><span>Product Intelligence</span></div>
+    </div>
+
+    <nav aria-label="Primary navigation">
+      <button class="nav active" data-page="overview"><span>◉</span>Overview</button>
+      <button class="nav" data-page="products"><span>▦</span>Products</button>
+      <button class="nav" data-page="inbox"><span>✉</span>Inbox</button>
+      <button class="nav" data-page="review"><span>◇</span>Review <b id="reviewNavCount" class="nav-count hidden">0</b></button>
+      <button class="nav" data-page="accounts"><span>◎</span>Gmail Accounts</button>
+      <button class="nav" data-page="sheets"><span>▤</span>Google Sheets</button>
+      <button class="nav" data-page="settings"><span>⚙</span>Settings</button>
+    </nav>
+
+    <div class="live-card">
+      <span class="live-dot"></span>
+      <div><strong id="liveEngineTitle">Live engine</strong><small id="sidebarLiveText">Waiting for Gmail</small></div>
+    </div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <div class="headline">
+        <div class="kicker">NUNES · PRODUCT INTELLIGENCE <span>V21.5 · SURREAL HYPERSPEED</span></div>
+        <h1>Procurement intelligence.<br><em>Clear, live, verified.</em></h1>
+        <p>Incoming Gmail, product-price extraction, evidence review and Google Sheets synchronization in one workspace.</p>
+      </div>
+      <div class="top-actions">
+        <select id="mailboxSelect" aria-label="Selected Gmail account"><option value="">No Gmail connected</option></select>
+        <form action="/auth/google/start" method="get" class="add-mail-form">
+          <input name="email" type="email" placeholder="Gmail to add (optional)" aria-label="Gmail to add">
+          <button class="button dark" type="submit">Add Gmail</button>
+        </form>
+        <button class="button" id="syncBtn">Check now</button>
+      </div>
+    </header>
+
+    <div class="health-strip" id="healthStrip">
+      <span id="healthGmail">Gmail · checking</span>
+      <span id="healthLocalAi">Local AI · checking</span>
+      <span id="healthDb">Database · checking</span>
+      <span id="healthSheets">Sheets · checking</span>
+      <span id="healthEngine">Engine · checking</span>
+      <span id="serverClock">Server time · —</span>
+    </div>
+
+    <div id="configWarning" class="warning hidden"></div>
+    <div id="engineAlert" class="engine-alert hidden"></div>
+
+    <section id="overviewPage" class="page">
+      <div class="overview-hero">
+        <div>
+          <span class="eyebrow">Selected mailbox</span>
+          <h2 id="overviewMailbox">—</h2>
+        </div>
+        <div class="live-pill"><i></i><span id="overviewLiveState">Live monitoring</span></div>
+      </div>
+
+      <div class="metrics primary-metrics">
+        <article><span>Inbox</span><strong id="statInbox">0</strong><small>Messages currently in Gmail</small></article>
+        <article><span>Processed</span><strong id="statAnalyzed">0</strong><small id="processedSub">Completed analysis</small></article>
+        <article><span>Remaining</span><strong id="statWaiting">0</strong><small>Still waiting or processing</small></article>
+        <article class="accent-metric"><span>Confirmed products</span><strong id="statProducts">0</strong><small>Evidence-verified records</small></article>
+      </div>
+
+      <div class="operation-panel">
+        <div class="operation-main">
+          <div class="operation-title">
+            <div><span class="eyebrow">Processing progress</span><strong id="processingHeadline">Ready</strong></div>
+            <b id="analysisPct">0%</b>
+          </div>
+          <div class="progress large"><i id="analysisBar"></i></div>
+          <div class="operation-foot">
+            <span id="analysisText">0 of 0 emails processed</span>
+            <span id="coverageStatus">Inbox coverage · 0%</span>
+          </div>
+        </div>
+        <div class="operation-stat"><span>Current speed</span><strong id="statRate">—</strong><small>emails / minute</small></div>
+        <div class="operation-stat"><span>Estimated time</span><strong id="statEta">—</strong><small>at current speed</small></div>
+        <div class="operation-stat last-result"><span>Latest product</span><strong id="statLastProduct">—</strong><small id="statLastProductTime">No confirmed product yet</small></div>
+      </div>
+
+      <div class="micro-status">
+        <button type="button" class="micro-card" data-jump="inbox"><span>Indexed</span><strong id="statIndexed">0</strong></button>
+        <button type="button" class="micro-card" data-jump="review"><span>Needs review</span><strong id="statReview">0</strong></button>
+        <button type="button" class="micro-card" data-jump="inbox"><span>Failed</span><strong id="statFailures">0</strong></button>
+        <button type="button" class="micro-card" data-jump="sheets"><span>Sheet pending</span><strong id="statSheetPending">0</strong></button>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="panel recent-panel">
+          <div class="panel-head">
+            <div><h2>Recent products</h2><p>Click a row to inspect evidence and open its source email.</p></div>
+            <input id="searchInput" placeholder="Search product, model or supplier" aria-label="Search recent products">
+          </div>
+          <div class="table-wrap"><table id="productTable"></table></div>
+        </div>
+
+        <div class="panel activity-panel">
+          <div class="panel-head compact-head"><div><h2>Live activity</h2><p>Most recently completed email work.</p></div><span id="activityUpdated" class="soft-label">Live</span></div>
+          <div id="activityList" class="activity-list"><div class="empty-card">Waiting for processing activity.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="productsPage" class="page hidden">
+      <div class="panel">
+        <div class="panel-head product-tools-head">
+          <div><h2>Extracted products</h2><p>Compact daily-use view. Full specifications, evidence and original Gmail are inside View details.</p></div>
+          <div class="product-tools">
+            <input id="searchInput2" placeholder="Search product, model or supplier">
+            <select id="productSort" aria-label="Sort products">
+              <option value="newest">Newest first</option>
+              <option value="name">Product A–Z</option>
+              <option value="priceAsc">Price low → high</option>
+              <option value="priceDesc">Price high → low</option>
+              <option value="supplier">Supplier A–Z</option>
+            </select>
+            <button class="button" id="cleanDupesBtn">Clean duplicates</button>
+          </div>
+        </div>
+        <div class="result-line"><span id="productResultCount">0 products</span><div class="product-pager"><button class="button small" id="productPrev">Previous</button><span id="productPageLabel">Page 1</span><button class="button small" id="productNext">Next</button></div></div>
+        <div class="table-wrap tall"><table id="productTable2"></table></div>
+      </div>
+    </section>
+
+    <section id="inboxPage" class="page hidden">
+      <div class="panel">
+        <div class="panel-head product-tools-head">
+          <div><h2>Inbox</h2><p>Every indexed message remains visible until it reaches a final state.</p></div>
+          <div class="product-tools">
+            <input id="inboxSearch" placeholder="Search sender or subject">
+            <select id="inboxFilter" aria-label="Filter Inbox status">
+              <option value="all">All statuses</option>
+              <option value="pending">Pending only</option>
+              <option value="completed">Completed only</option>
+              <option value="error">Failures only</option>
+            </select>
+            <button class="button" id="retryErrorsBtn">Retry failures</button>
+            <button class="button" id="restartHistoryBtn">Verify full Inbox</button>
+          </div>
+        </div>
+        <div class="table-wrap tall"><table id="inboxTable"></table></div>
+      </div>
+    </section>
+
+    <section id="reviewPage" class="page hidden">
+      <div class="panel">
+        <div class="panel-head"><div><h2>Needs review</h2><p>Only uncertain product/price evidence appears here. Nothing ambiguous is silently discarded.</p></div></div>
+        <div class="review-list" id="reviewList"><div class="empty-card">No review items.</div></div>
+      </div>
+    </section>
+
+    <section id="accountsPage" class="page hidden">
+      <div class="panel">
+        <div class="panel-head">
+          <div><h2>Gmail accounts</h2><p>Add, switch or disconnect mailboxes. Each mailbox is processed independently in the V21.5 Python-first database.</p></div>
+          <form action="/auth/google/start" method="get" class="add-mail-form compact">
+            <input name="email" type="email" placeholder="example@gmail.com">
+            <button class="button dark" type="submit">Add Gmail</button>
+          </form>
+        </div>
+        <div id="gmailAccountCards" class="account-grid"></div>
+      </div>
+    </section>
+
+    <section id="sheetsPage" class="page hidden">
+      <div class="panel">
+        <div class="panel-head">
+          <div><h2>Google Sheets</h2><p>Database remains the source of truth; Sheet export runs independently in the background.</p></div>
+          <a class="button dark hidden" id="openSheetBtn" target="_blank" rel="noopener">Open Sheet</a>
+        </div>
+        <div class="sheet-summary refined-sheet-summary">
+          <div><span>Extracted emails</span><strong id="sheetExtractedEmails">0</strong><small>Emails that produced products</small></div>
+          <div><span>Confirmed products</span><strong id="sheetTotal">0</strong><small>Eligible database rows</small></div>
+          <div><span>Sheet emails</span><strong id="sheetExportedEmails">0</strong><small>Source emails represented</small></div>
+          <div><span>Sheet rows</span><strong id="sheetExported">0</strong><small>Products exported</small></div>
+          <div><span>Pending rows</span><strong id="sheetPending">0</strong><small>Waiting for export</small></div>
+          <div><span>Errors</span><strong id="sheetErrors">0</strong><small>Sheet write failures</small></div>
+        </div>
+        <div class="sheet-setup">
+          <div><h3 id="sheetStatusTitle">Not configured</h3><p id="sheetStatusSub">Create/connect once. Product processing never waits for Google Sheets.</p></div>
+          <button class="button dark" id="createSheetBtn">Create Sheet</button>
+        </div>
+        <div class="form-row">
+          <label><span>Existing Google Sheet URL or ID</span><input id="existingSheetInput" placeholder="Paste Sheet URL or ID"></label>
+          <label><span>Selected Gmail tab name</span><input id="sheetTabInput" placeholder="e.g. Purchase"></label>
+          <button class="button" id="connectSheetBtn">Connect</button>
+          <button class="button" id="exportAllSheetBtn">Export pending</button>
+        </div>
+        <div id="sheetMessage" class="notice hidden"></div>
+        <div class="sheet-quality-actions">
+          <div>
+            <strong>Accuracy controls</strong>
+            <span id="sheetAccuracyState">Only evidence-confirmed prices are eligible for Sheet export.</span>
+          </div>
+          <div class="panel-actions">
+            
+            <button class="button dark" id="rebuildSheetBtn">Rebuild verified Sheet</button>
+          </div>
+        </div>
+        <div class="sheet-schema-card">
+          <div><span class="eyebrow">V21.5 Verified Sheet schema</span><h3>Seven procurement columns · two verified prices</h3><p>Original Price and Discounted Price are exported separately. Image, Image Link, Marketing Person and Purchase Owner remain removed. Only V21.5 evidence-verified rows are exported; uncertain rows stay in Review.</p></div>
+          <div id="sheetColumnList" class="column-chips"></div>
+        </div>
+        <div class="subhead"><h3>Gmail → Sheet tab names</h3><p>Rename a Gmail tab here and the actual Google Sheet tab is renamed too.</p></div>
+        <div id="sheetAccountTabs" class="tab-mapping"></div>
+      </div>
+    </section>
+
+    <section id="settingsPage" class="page hidden">
+      <div class="panel">
+        <div class="panel-head"><div><h2>Settings & diagnostics</h2><p>Technical information lives here rather than on the daily dashboard.</p></div><div class="panel-actions"><button class="button" id="recoverEngineBtn">Recover engine</button><button class="button" id="localAiTestBtn">Verify local AI</button><a class="button" href="/setup">Credential setup</a></div></div>
+        <div class="settings-grid" id="settingsStatus"></div>
+        <div class="diagnostic-note"><strong>Pipeline rule</strong><span>Indexed emails must always equal Completed + Pending + Failed. Product totals are separate because one email may contain multiple products.</span></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="modal hidden" id="productModal" aria-hidden="true">
+  <div class="modal-backdrop" data-close-modal></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-label="Product details">
+    <button class="modal-close" data-close-modal aria-label="Close">×</button>
+    <div id="productModalBody"><div class="modal-loading">Loading product evidence…</div></div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toastStack" aria-live="polite"></div>
+<script src="/static/app_v215.js?v=215-surreal-hyperspeed"></script>
+</body>
+</html>
+

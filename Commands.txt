@@ -1,0 +1,4 @@
+Test-NetConnection 100.77.65.18 -Port 5067
+
+
+http://100.77.65.18:5067

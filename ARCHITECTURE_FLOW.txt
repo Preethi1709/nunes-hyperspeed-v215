@@ -1,0 +1,57 @@
+NUNES PRODUCT INTELLIGENCE V21.5 SURREAL HYPERSPEED
+===================================================
+
+GMAIL
+  |
+  v
+STAGE 0 - CONSERVATIVE OBVIOUS-IRRELEVANT FILTER
+  |-- certainly irrelevant -> DONE / IRRELEVANT
+  `-- everything else
+          |
+          v
+STAGE 1 - FORMAT CLASSIFICATION ONLY
+          |
+          +--> TEXT queue
+          +--> PDF queue
+          +--> TABLE queue (XLS/XLSX/CSV/TSV)
+          +--> DOC queue (DOCX/TXT)
+          +--> OCR queue (images / scanned PDF)
+          `--> OTHER bounded exception queue
+
+STAGE 2 - INDEPENDENT SPECIALIST PROCESSORS
+  TEXT  : cheap price probe -> Python extraction
+  PDF   : filename priority -> embedded-text price sweep -> targeted pages -> parser
+  TABLE : cheap price/header probe -> deterministic row/column extraction
+  DOC   : cheap price probe -> deterministic text/table extraction
+  OCR   : progressive bounded OCR -> empty-page circuit breaker -> extraction
+
+All specialist lanes run independently; a slow OCR scan does not block TEXT/PDF/TABLE/DOC.
+          |
+          v
+PYTHON CURRENT-SOURCE EVIDENCE VERIFY
+          |
+          +--> proven -> CONFIRMED / export eligible
+          +--> no commercial evidence -> NO PRODUCT / DONE
+          `--> unresolved
+                  |
+                  v
+CROSS-DOCUMENT PYTHON RESCUE
+                  |
+                  +--> proven -> CONFIRMED
+                  `--> unresolved
+                          |
+                          v
+LOCAL AI EXCEPTION ONLY
+ qwen3:1.7b -> qwen3:4b -> qwen3-vl:4b when truly visual
+                          |
+                          v
+PYTHON FINAL EVIDENCE FIREWALL
+                  |                    |
+                  v                    v
+              CONFIRMED              REVIEW
+
+RAG: REMOVED
+EMBEDDINGS: REMOVED
+GEMINI/CLOUD EXTRACTION: DISABLED
+GOOGLE SHEETS: output sink only
+DATABASE: SQLite WAL schema 215
