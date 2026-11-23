@@ -387,7 +387,7 @@ def oauth_configured():
         not _placeholder(client_id)
         and client_id.endswith(".apps.googleusercontent.com")
         and not _placeholder(secret)
-        and redirect == "http://127.0.0.1:5067/auth/google/callback"
+        and redirect in {"http://127.0.0.1:5067/auth/google/callback", "https://nunes-hyperspeed-v215.onrender.com/auth/google/callback"}
     )
 
 
